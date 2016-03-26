@@ -6,7 +6,7 @@ Provides a <a href="https://github.com/square/retrofitr">retrofit</a> converter 
 
 ```java
 
-import btheu.retrofit.converter.jsoup.JSoupConverter
+import btheu.retrofit.jsoup.converter.JSoupConverter
 ...
 
 RestAdapter build = new RestAdapter.Builder()

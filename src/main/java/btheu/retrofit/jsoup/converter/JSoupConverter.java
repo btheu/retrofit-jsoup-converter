@@ -1,4 +1,4 @@
-package btheu.retrofit.converter.jsoup;
+package btheu.retrofit.jsoup.converter;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

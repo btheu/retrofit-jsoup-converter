@@ -1,4 +1,4 @@
-package btheu.retrofit.converter.jsoup;
+package btheu.retrofit.jsoup.converter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import btheu.jsoupmapper.JSoupMapper;
 import btheu.jsoupmapper.JSoupSelect;
 import btheu.jsoupmapper.JSoupText;
+import btheu.retrofit.jsoup.converter.JSoupConverter;
 import junit.framework.TestCase;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
