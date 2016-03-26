@@ -10,7 +10,10 @@ import junit.framework.TestCase;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import retrofit.RestAdapter;
+import retrofit.RestAdapter.LogLevel;
 import retrofit.http.GET;
+import retrofit.http.Headers;
+import retrofit.http.Query;
 
 /**
  * 
@@ -25,21 +28,21 @@ public class JSoupConverterTest {
 
         JSoupMapper jSoupMapper = new JSoupMapper();
         jSoupMapper.setEncoding("cp1252");
-        jSoupMapper.setBaseURI("http://www.google.com/");
+        jSoupMapper.setBaseURI("https://www.google.com/");
 
         JSoupConverter jSoupConverter = new JSoupConverter(jSoupMapper);
 
-        RestAdapter build = new RestAdapter.Builder()
+        RestAdapter build = new RestAdapter.Builder().setLogLevel(LogLevel.NONE)
                 .setConverter(jSoupConverter)
-                .setEndpoint("http://www.google.com/").build();
+                .setEndpoint("https://www.google.com/").build();
 
         GoogleApi create = build.create(GoogleApi.class);
 
-        String sentence = create.getIndexPage().getSentence();
+        String stats = create.search("retrofit").getResultStatistique();
 
-        assertNotEmpty(sentence);
+        assertNotEmpty(stats);
 
-        log.info("Result {}", sentence);
+        log.info("Statistics [{}]", stats);
 
     }
 
@@ -50,17 +53,19 @@ public class JSoupConverterTest {
 
     public static interface GoogleApi {
 
-        @GET("/")
-        public Page getIndexPage();
+        @GET("/search?hl=en&safe=off")
+        @Headers({ "User-Agent:Mozilla" })
+        public Page search(@Query("q") String query);
 
     }
 
     @Data
     public static class Page {
 
-        @JSoupSelect("#prm")
+        // get the div holding statistics
+        @JSoupSelect("#resultStats")
         @JSoupText
-        public String sentence;
+        public String resultStatistique;
 
     }
 }
