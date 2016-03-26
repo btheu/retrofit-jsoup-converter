@@ -6,7 +6,6 @@ import org.junit.Test;
 import btheu.jsoupmapper.JSoupMapper;
 import btheu.jsoupmapper.JSoupSelect;
 import btheu.jsoupmapper.JSoupText;
-import btheu.retrofit.jsoup.converter.JSoupConverter;
 import junit.framework.TestCase;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +32,14 @@ public class JSoupConverterTest {
 
         JSoupConverter jSoupConverter = new JSoupConverter(jSoupMapper);
 
-        RestAdapter build = new RestAdapter.Builder().setLogLevel(LogLevel.NONE)
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(LogLevel.NONE)
                 .setConverter(jSoupConverter)
                 .setEndpoint("https://www.google.com/").build();
 
-        GoogleApi create = build.create(GoogleApi.class);
+        GoogleApi googleApi = restAdapter.create(GoogleApi.class);
 
-        String stats = create.search("retrofit").getResultStatistique();
+        String stats = googleApi.search("retrofit").getResultStatistics();
 
         assertNotEmpty(stats);
 
@@ -66,7 +66,7 @@ public class JSoupConverterTest {
         // get the div holding statistics
         @JSoupSelect("#resultStats")
         @JSoupText
-        public String resultStatistique;
+        public String resultStatistics;
 
     }
 }
