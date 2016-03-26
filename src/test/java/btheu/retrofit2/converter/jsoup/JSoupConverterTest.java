@@ -38,9 +38,9 @@ public class JSoupConverterTest {
                 .baseUrl("https://www.google.com/")
                 .addConverterFactory(JSoupConverterFactory.create()).build();
 
-        GoogleApi create = retrofit.create(GoogleApi.class);
+        GoogleApi googleApi = retrofit.create(GoogleApi.class);
 
-        String stats = create.search("retrofit").execute().body()
+        String stats = googleApi.search("retrofit").execute().body()
                 .getResultStatistics();
 
         assertNotEmpty(stats);
