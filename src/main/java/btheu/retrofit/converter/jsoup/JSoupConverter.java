@@ -16,11 +16,21 @@ import retrofit.mime.TypedOutput;
  */
 public class JSoupConverter implements Converter {
 
+    protected JSoupMapper jSoupMapper;
+
+    public JSoupConverter() {
+        this(new JSoupMapper());
+    }
+
+    public JSoupConverter(JSoupMapper jSoupMapper) {
+        this.jSoupMapper = jSoupMapper;
+    }
+
     @Override
     public Object fromBody(TypedInput body, Type type)
             throws ConversionException {
         try {
-            return new JSoupMapper().map(body.in(), type);
+            return jSoupMapper.map(body.in(), type);
         } catch (IOException e) {
             throw new RuntimeException("Error occurs during conversion", e);
         }
