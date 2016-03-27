@@ -78,7 +78,9 @@ RestAdapter build = new RestAdapter.Builder()
 
 ```
 
-### Download the converter
+### Download
+
+Download via Maven:
 
 ```xml
 <dependency>

@@ -1,6 +1,4 @@
-package btheu.retrofit2.converter.jsoup;
-
-import java.io.IOException;
+package btheu.retrofit.jsoup.converter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,16 +6,14 @@ import org.junit.Test;
 import btheu.jsoupmapper.JSoupMapper;
 import btheu.jsoupmapper.JSoupSelect;
 import btheu.jsoupmapper.JSoupText;
-import btheu.retrofit2.jsoup.JSoup;
-import btheu.retrofit2.jsoup.converter.JSoupConverterFactory;
 import junit.framework.TestCase;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.Query;
+import retrofit.RestAdapter;
+import retrofit.RestAdapter.LogLevel;
+import retrofit.http.GET;
+import retrofit.http.Headers;
+import retrofit.http.Query;
 
 /**
  * 
@@ -28,20 +24,22 @@ import retrofit2.http.Query;
 public class JSoupConverterTest {
 
     @Test
-    public void test() throws IOException {
+    public void test() {
 
         JSoupMapper jSoupMapper = new JSoupMapper();
         jSoupMapper.setEncoding("cp1252");
         jSoupMapper.setBaseURI("https://www.google.com/");
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.google.com/")
-                .addConverterFactory(JSoupConverterFactory.create()).build();
+        JSoupConverter jSoupConverter = new JSoupConverter(jSoupMapper);
 
-        GoogleApi googleApi = retrofit.create(GoogleApi.class);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(LogLevel.NONE)
+                .setConverter(jSoupConverter)
+                .setEndpoint("https://www.google.com/").build();
 
-        String stats = googleApi.search("retrofit").execute().body()
-                .getResultStatistics();
+        GoogleApi googleApi = restAdapter.create(GoogleApi.class);
+
+        String stats = googleApi.search("retrofit").getResultStatistics();
 
         assertNotEmpty(stats);
 
@@ -56,10 +54,9 @@ public class JSoupConverterTest {
 
     public static interface GoogleApi {
 
-        @JSoup
         @GET("/search?hl=en&safe=off")
         @Headers({ "User-Agent:Mozilla" })
-        public Call<Page> search(@Query("q") String query);
+        public Page search(@Query("q") String query);
 
     }
 
